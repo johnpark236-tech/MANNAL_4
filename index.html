@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌸 두근두근 사자성어 챌린지 🌸</title>
+    <title>🌸 알쏭달쏭 사자성어 챌린지 🌸</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <style>
-        /* CSS 변수를 사용하여 유저가 선택한 테마 색상을 전역으로 관리합니다. */
-        :root {
-            --theme-color: #2C5F2D; /* 기본값: 빈티지 딥 그린 */
-        }
-
         body {
             background-color: #FFF0F5;
             font-family: 'Jua', sans-serif;
@@ -40,12 +35,12 @@
             text-shadow: 1px 1px 2px rgba(255, 182, 193, 0.5);
         }
 
-        /* 인트로 및 테마 선택 화면 전용 스타일 */
-        #intro-screen h1, #theme-screen h1 {
+        /* 인트로 및 난이도 선택 화면 전용 스타일 */
+        #intro-screen h1, #difficulty-screen h1 {
             font-size: 32px;
             margin-bottom: 20px;
         }
-        #intro-screen p, #theme-screen p {
+        #intro-screen p, #difficulty-screen p {
             font-size: 18px;
             color: #8B008B;
             margin-bottom: 30px;
@@ -69,37 +64,33 @@
             transform: translateY(-2px);
         }
 
-        /* 테마 선택 버튼 스타일 */
-        .theme-options {
+        /* 난이도 선택 버튼 스타일 */
+        .diff-options {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        .theme-btn {
+        .diff-btn {
             font-family: 'Jua', sans-serif;
             background: #f8f8f8;
-            border: 3px solid transparent;
-            padding: 12px;
+            color: #333;
+            border: 3px solid #FFC0CB;
+            padding: 15px;
             border-radius: 15px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
         }
-        /* 테마별 버튼 글자색 */
-        .theme-btn.green { color: #2C5F2D; }
-        .theme-btn.wine { color: #5C0632; }
-        .theme-btn.navy { color: #1A237E; }
-        
-        /* 선택된 테마 테두리 강조 */
-        .theme-btn.selected {
-            border-color: #FF69B4;
+        .diff-btn:hover {
             background: #FFE4E1;
+            border-color: #FF69B4;
+            transform: translateY(-2px);
         }
 
         /* 메인 게임 화면 스타일 (초기 숨김) */
-        #theme-screen, #app {
+        #difficulty-screen, #app {
             display: none; 
         }
 
@@ -138,25 +129,24 @@
             gap: 12px;
         }
         
-        /* 🌟 선택지 버튼 스타일 (CSS 변수 적용) 🌟 */
+        /* 🌟 선택지 버튼 스타일 (핑크 바탕 + 흰색 글씨 복구) 🌟 */
         button.option-btn {
             font-family: 'Jua', sans-serif;
-            background: #FFD1DC; 
-            color: var(--theme-color); /* 유저가 선택한 색상 반영 */
+            background: #FF69B4; /* 화사한 핑크 바탕 */
+            color: white;        /* 깔끔한 흰색 글씨 */
             font-weight: bold;
-            border: 2px solid #FFD1DC; 
+            border: 2px solid #FF69B4; 
             padding: 15px;
             border-radius: 20px;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(255, 182, 193, 0.4);
+            box-shadow: 0 4px 6px rgba(255, 105, 180, 0.4);
         }
         
         button.option-btn:hover {
-            background: var(--theme-color); /* 유저가 선택한 색상 반영 */
-            color: #FFD1DC;      
-            border: 2px solid var(--theme-color);
+            background: #FF1493; /* 마우스 오버 시 조금 더 진한 핑크 */
+            border: 2px solid #FF1493;
             transform: translateY(-2px);
         }
         button.option-btn:active {
@@ -167,7 +157,7 @@
             margin-top: 20px;
             font-size: 16px;
             color: #FF1493;
-            height: 60px; /* 보상 텍스트를 위해 높이 증가 */
+            height: 60px; /* 보상 텍스트를 위해 높이 유지 */
             line-height: 1.4;
         }
     </style>
@@ -176,19 +166,18 @@
 
 <div id="intro-screen" class="card">
     <h1>MANNAL 사자성어</h1>
-    <p>사자성어 마스터를 향한<br>두근두근 여정을 떠나볼까요?</p>
-    <button class="start-btn" onclick="goToThemeSelection()">신나게 시작해 보자 확인!</button>
+    <p>사자성어 마스터를 향한<br>알쏭달쏭 여정을 떠나볼까요?</p>
+    <button class="start-btn" onclick="goToDifficultySelection()">신나게 시작해 보자 확인!</button>
 </div>
 
-<div id="theme-screen" class="card">
-    <h1>🎨 폰트 테마 선택</h1>
-    <p>가장 마음에 드는 색상을 골라주세요!</p>
-    <div class="theme-options">
-        <button class="theme-btn green selected" onclick="selectTheme('#2C5F2D', this)">빈티지 딥 그린</button>
-        <button class="theme-btn wine" onclick="selectTheme('#5C0632', this)">엘레강스 딥 와인</button>
-        <button class="theme-btn navy" onclick="selectTheme('#1A237E', this)">소프트 네이비</button>
+<div id="difficulty-screen" class="card">
+    <h1>🎯 난이도 선택</h1>
+    <p>도전할 난이도를 골라주세요!</p>
+    <div class="diff-options">
+        <button class="diff-btn" onclick="startGame('초급')">🌱 초급 (Beginner)</button>
+        <button class="diff-btn" onclick="startGame('중급')">🌿 중급 (Intermediate)</button>
+        <button class="diff-btn" onclick="startGame('고급')">🔥 고급 (Advanced)</button>
     </div>
-    <button class="start-btn" onclick="startGame()">게임 시작!</button>
 </div>
 
 <div id="app" class="card">
@@ -213,7 +202,6 @@
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
-    // 브라우저 정책상 사용자 상호작용이 있어야 오디오 문맥이 열립니다.
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new AudioContext();
@@ -223,7 +211,6 @@
         }
     }
 
-    // 주파수를 이용해 멜로디 생성하는 함수
     function playTone(freq, type, duration, startTime) {
         if (!audioCtx) return;
         const osc = audioCtx.createOscillator();
@@ -237,90 +224,90 @@
         osc.stop(audioCtx.currentTime + startTime + duration);
     }
 
-    // 띵동! (긍정음 / 인트로 등장음)
     function playDingDong() {
         initAudio();
         playTone(659.25, 'sine', 0.5, 0);       // 미(E5)
         playTone(523.25, 'sine', 0.5, 0.4);     // 도(C5)
     }
 
-    // 삐삐! (부정음)
     function playBeepBeep() {
         initAudio();
-        playTone(300, 'square', 0.2, 0);        // 낮고 짧은 소리
+        playTone(300, 'square', 0.2, 0);        
         playTone(300, 'square', 0.2, 0.3);      
     }
 
-    // 인트로 화면이 뜰 때 '띵동' 소리 재생을 시도합니다.
-    // (크롬 등 일부 브라우저에서는 화면 클릭 전까지 소리가 막힐 수 있습니다)
     window.onload = () => {
-        // 혹시 모를 브라우저 차단 방지를 위해 화면의 어느 곳이든 클릭하면 오디오 문맥을 엽니다.
         document.body.addEventListener('click', initAudio, { once: true });
-        
         try { playDingDong(); } catch(e) {} 
     };
 
     /* =======================================================
-       🎨 테마 선택 로직
+       🚀 게임 메인 로직 및 데이터베이스
        ======================================================= */
-    let selectedColor = '#2C5F2D'; // 기본 색상 설정
-
-    const introScreen = document.getElementById("intro-screen");
-    const themeScreen = document.getElementById("theme-screen");
-    const appScreen = document.getElementById("app");
-
-    // 인트로에서 테마 선택 창으로 이동
-    function goToThemeSelection() {
-        initAudio(); // 버튼 클릭 시 오디오 활성화 확정
-        introScreen.style.display = "none";
-        themeScreen.style.display = "block";
-    }
-
-    // 유저가 테마 버튼을 클릭했을 때 처리
-    function selectTheme(color, buttonElement) {
-        selectedColor = color;
-        // 모든 버튼의 selected 클래스 제거 후, 클릭한 버튼에만 추가
-        document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('selected'));
-        buttonElement.classList.add('selected');
-    }
-
-
-    /* =======================================================
-       🚀 게임 메인 로직
-       ======================================================= */
+    
+    // 난이도(difficulty) 속성이 추가된 사자성어 DB
     const idiomDB = [
-        { hanja: "一就月將", hangul: "일취월장", meaning: "날로 달로 나아지거나 발전함" },
-        { hanja: "大器晩成", hangul: "대기만성", meaning: "큰 사람이 되기 위해서는 많은 노력과 시간이 필요함" },
-        { hanja: "作心三日", hangul: "작심삼일", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
-        { hanja: "結者解之", hangul: "결자해지", meaning: "일을 맺은 사람이 풀어야 한다는 뜻으로, 일을 저지른 사람이 해결해야 함" },
-        { hanja: "苦盡甘來", hangul: "고진감래", meaning: "고생 끝에 낙이 온다" },
-        { hanja: "雪上加霜", hangul: "설상가상", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
-        { hanja: "見蚊拔劍", hangul: "견문발검", meaning: "모기를 보고 칼을 뺀다는 뜻으로, 사소한 일에 크게 성내어 덤빔" },
-        { hanja: "伯牙絶絃", hangul: "백아절현", meaning: "자기를 알아주는 절친한 벗의 죽음을 슬퍼함" },
-        { 파자: "塞翁之馬", hangul: "새옹지마", meaning: "인생의 길흉화복은 변화가 많아 예측하기 어려움" },
-        { hanja: "脣亡齒寒", hangul: "순망치한", meaning: "입술이 없으면 이가 시리다는 뜻으로, 가까운 사이의 한쪽이 망하면 다른 한쪽도 위험해짐" },
-        { hanja: "羊頭狗肉", hangul: "양두구육", meaning: "양 머리를 걸어놓고 개고기를 판다는 뜻으로, 겉과 속이 다름" },
-        { hanja: "兎死狗烹", hangul: "토사구팽", meaning: "토끼가 죽으면 사냥개도 삶아 먹힌다는 뜻으로, 필요할 때는 쓰고 필요 없을 때는 버림" }
+        // 🌱 초급 사자성어
+        { difficulty: "초급", hanja: "一就月將", hangul: "일취월장", meaning: "날로 달로 나아지거나 발전함" },
+        { difficulty: "초급", hanja: "大器晩成", hangul: "대기만성", meaning: "큰 사람이 되기 위해서는 많은 노력과 시간이 필요함" },
+        { difficulty: "초급", hanja: "作心三日", hangul: "작심삼일", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
+        { difficulty: "초급", hanja: "結者解之", hangul: "결자해지", meaning: "일을 맺은 사람이 풀어야 한다는 뜻으로, 일을 저지른 사람이 해결해야 함" },
+        { difficulty: "초급", hanja: "苦盡甘來", hangul: "고진감래", meaning: "고생 끝에 낙이 온다" },
+        { difficulty: "초급", hanja: "雪上加霜", hangul: "설상가상", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
+        
+        // 🌿 중급 사자성어
+        { difficulty: "중급", hanja: "見蚊拔劍", hangul: "견문발검", meaning: "모기를 보고 칼을 뺀다는 뜻으로, 사소한 일에 크게 성내어 덤빔" },
+        { difficulty: "중급", hanja: "伯牙絶絃", hangul: "백아절현", meaning: "자기를 알아주는 절친한 벗의 죽음을 슬퍼함" },
+        { difficulty: "중급", 파자: "塞翁之馬", hangul: "새옹지마", meaning: "인생의 길흉화복은 변화가 많아 예측하기 어려움" },
+        { difficulty: "중급", hanja: "脣亡齒寒", hangul: "순망치한", meaning: "입술이 없으면 이가 시리다는 뜻으로, 가까운 사이의 한쪽이 망하면 다른 한쪽도 위험해짐" },
+        { difficulty: "중급", hanja: "羊頭狗肉", hangul: "양두구육", meaning: "양 머리를 걸어놓고 개고기를 판다는 뜻으로, 겉과 속이 다름" },
+        { difficulty: "중급", hanja: "兎死狗烹", hangul: "토사구팽", meaning: "토끼가 죽으면 사냥개도 삶아 먹힌다는 뜻으로, 필요할 때는 쓰고 필요 없을 때는 버림" },
+        
+        // 🔥 고급 사자성어 (새로 6개 추가됨)
+        { difficulty: "고급", hanja: "囊中之錐", hangul: "낭중지추", meaning: "주머니 속의 송곳이라는 뜻으로, 재능이 뛰어난 사람은 숨어 있어도 저절로 드러남" },
+        { difficulty: "고급", hanja: "狐假虎威", hangul: "호가호위", meaning: "여우가 호랑이의 위세를 빌린다는 뜻으로, 남의 권세를 빌려 허세를 부림" },
+        { difficulty: "고급", hanja: "畵龍點睛", hangul: "화룡점정", meaning: "용을 그리고 마지막으로 눈동자를 찍는다는 뜻으로, 가장 중요한 부분을 완성함" },
+        { difficulty: "고급", hanja: "群鷄一鶴", hangul: "군계일학", meaning: "여러 평범한 사람들 가운데 뛰어난 한 사람" },
+        { difficulty: "고급", hanja: "換骨奪胎", hangul: "환골탈태", meaning: "낡은 제도나 관습을 고쳐 모습이 완전히 새롭게 바뀜" },
+        { difficulty: "고급", hanja: "錦衣還鄕", hangul: "금의환향", meaning: "비단옷을 입고 고향에 돌아온다는 뜻으로, 출세하여 고향에 돌아옴" }
     ];
 
+    let filteredDB = []; // 유저가 선택한 난이도의 사자성어만 담을 배열
     let currentLevel = 1;
     const maxLevel = 100;
     let questionsToAnswer = 1; 
     let currentQuestionCount = 0; 
     let currentCorrectAnswer = "";
 
+    const introScreen = document.getElementById("intro-screen");
+    const difficultyScreen = document.getElementById("difficulty-screen");
+    const appScreen = document.getElementById("app");
     const levelDisplay = document.getElementById("level-display");
     const progressDisplay = document.getElementById("progress-display");
     const hanjaDisplay = document.getElementById("hanja-display");
     const optionsContainer = document.getElementById("options-container");
     const messageDisplay = document.getElementById("message");
 
-    function startGame() {
-        // 선택한 색상을 CSS 변수(--theme-color)에 적용
-        document.documentElement.style.setProperty('--theme-color', selectedColor);
+    // 화면 전환: 인트로 -> 난이도 선택
+    function goToDifficultySelection() {
+        initAudio(); 
+        introScreen.style.display = "none";
+        difficultyScreen.style.display = "block";
+    }
+
+    // 난이도 선택 후 게임 시작
+    function startGame(selectedDifficulty) {
+        initAudio();
         
-        themeScreen.style.display = "none";
+        // 선택한 난이도와 일치하는 데이터만 추려냅니다.
+        filteredDB = idiomDB.filter(item => item.difficulty === selectedDifficulty);
+        
+        difficultyScreen.style.display = "none";
         appScreen.style.display = "block";
+        
+        // 시작 시 상단에 선택한 난이도 표시
+        levelDisplay.innerText = `${selectedDifficulty} - Level 1`;
+        
         generateQuestion();
     }
 
@@ -342,7 +329,6 @@
         return `레벨 ${level}!!! 우주 최강 사자성어 신의 경지! 오늘 당장 로또 사세요! 🚀💰`;
     }
 
-    // 🎁 MZ 세대 맞춤형 센스 있는 보상 텍스트 배열
     const MZRewards = [
         "다이어트 안 해도 1kg 순삭! 폼 미쳤다! 🏃‍♀️💨",
         "내일 아침 꿀피부 예약! 여드름 광클 삭제! ✨",
@@ -358,13 +344,15 @@
         messageDisplay.innerText = "";
         progressDisplay.innerText = `현재 레벨 진행도: ${currentQuestionCount} / ${questionsToAnswer}`;
         
-        const correctIdiom = idiomDB[Math.floor(Math.random() * idiomDB.length)];
+        // 전체 DB가 아닌 필터링된 DB(해당 난이도)에서 문제 출제
+        const correctIdiom = filteredDB[Math.floor(Math.random() * filteredDB.length)];
         currentCorrectAnswer = correctIdiom.meaning;
         
         const hangulText = correctIdiom.hangul ? correctIdiom.hangul : "";
         hanjaDisplay.innerText = `${correctIdiom.hanja || correctIdiom.파자}(${hangulText})`;
 
-        let wrongOptions = idiomDB.filter(item => item.meaning !== currentCorrectAnswer);
+        // 오답 역시 같은 난이도의 DB에서 추출
+        let wrongOptions = filteredDB.filter(item => item.meaning !== currentCorrectAnswer);
         wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
 
         let options = [correctIdiom.meaning, ...wrongOptions.map(item => item.meaning)];
@@ -382,7 +370,7 @@
 
     function checkAnswer(selectedOption) {
         if (selectedOption === currentCorrectAnswer) {
-            playDingDong(); // 정답 효과음
+            playDingDong(); 
             currentQuestionCount++;
             messageDisplay.style.color = "#FF1493";
             messageDisplay.innerText = "정답입니다! 💕";
@@ -396,21 +384,23 @@
                     currentLevel++;
                     questionsToAnswer = currentLevel; 
                     currentQuestionCount = 0;
-                    levelDisplay.innerText = `Level ${currentLevel}`;
                     
-                    // 칭찬 문구와 랜덤 보상 텍스트를 조합하여 표시
+                    // 레벨업 시 현재 난이도를 유지하며 텍스트 업데이트
+                    const currentDifficultyText = levelDisplay.innerText.split(' - ')[0];
+                    levelDisplay.innerText = `${currentDifficultyText} - Level ${currentLevel}`;
+                    
                     const randomReward = MZRewards[Math.floor(Math.random() * MZRewards.length)];
                     messageDisplay.innerHTML = `${getPraiseMessage(currentLevel)}<br><span style="color:#2C5F2D; font-size:15px; font-weight:bold;">🎁 보너스: ${randomReward}</span>`;
                 }
                 
-                const delay = currentQuestionCount === 0 ? 3000 : 800; // 보상 읽을 시간 3초 부여
+                const delay = currentQuestionCount === 0 ? 3000 : 800; 
                 setTimeout(() => {
                     generateQuestion();
                 }, delay);
 
             }, 500); 
         } else {
-            playBeepBeep(); // 오답 부정음 효과음
+            playBeepBeep(); 
             messageDisplay.style.color = "red";
             messageDisplay.innerText = "앗! 틀렸어요. 처음부터 다시! 😢";
             currentQuestionCount = 0;
