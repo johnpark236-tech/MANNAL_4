@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 두근두근 사자성어 챌린지 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFF0F5; /* 연한 라벤더 핑크 배경 */
+            font-family: 'Jua', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        #app {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 4px solid #FFC0CB;
+        }
+        h1 {
+            color: #FF69B4;
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 2px rgba(255, 182, 193, 0.5);
+        }
+        .level-info {
+            background: #FFE4E1;
+            color: #D11585;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .progress {
+            font-size: 14px;
+            color: #FF69B4;
+            margin-bottom: 10px;
+        }
+        .question-box {
+            margin-bottom: 25px;
+        }
+        .hanja {
+            font-size: 48px;
+            font-weight: bold;
+            color: #C71585;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-size: 18px;
+            color: #8B008B;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        button.option-btn {
+            font-family: 'Jua', sans-serif;
+            background: #FFB6C1;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(255, 182, 193, 0.4);
+        }
+        button.option-btn:hover {
+            background: #FF69B4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(255, 105, 180, 0.5);
+        }
+        button.option-btn:active {
+            transform: translateY(1px);
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #FF1493;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <h1>🌸 사자성어 챌린지 🌸</h1>
+    <div class="level-info" id="level-display">Level 1</div>
+    <div class="progress" id="progress-display">현재 레벨 진행도: 0 / 1</div>
+    
+    <div class="question-box">
+        <div class="hanja" id="hanja-display"></div>
+        <div class="question-text">이 사자성어(한문)의 풀이에 맞는 것은?</div>
+    </div>
+
+    <div class="options" id="options-container">
+        </div>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    // 엄격하게 4글자로만 이루어진 사자성어 데이터베이스 (난이도별 분리 가능)
+    // 추후 보유하신 수천 개의 데이터를 이 배열 형식에 맞춰 붙여넣으시면 됩니다.
+    const idiomDB = [
+        // 쉬운 사자성어 (레벨 초반용)
+        { hanja: "一就月將", meaning: "날로 달로 나아지거나 발전함" },
+        { hanja: "大器晩成", meaning: "큰 사람이 되기 위해서는 많은 노력과 시간이 필요함" },
+        { hanja: "作心三日", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
+        { hanja: "結者解之", meaning: "일을 맺은 사람이 풀어야 한다는 뜻으로, 일을 저지른 사람이 해결해야 함" },
+        { hanja: "苦盡甘來", meaning: "고생 끝에 낙이 온다" },
+        { hanja: "雪上加霜", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
+        // 중간/어려운 사자성어 (레벨이 오를수록 등장)
+        { hanja: "見蚊拔劍", meaning: "모기를 보고 칼을 뺀다는 뜻으로, 사소한 일에 크게 성내어 덤빔" },
+        { hanja: "伯牙絶絃", meaning: "자기를 알아주는 절친한 벗의 죽음을 슬퍼함" },
+        { hanja: "塞翁之馬", meaning: "인생의 길흉화복은 변화가 많아 예측하기 어려움" },
+        { hanja: "脣亡齒寒", meaning: "입술이 없으면 이가 시리다는 뜻으로, 가까운 사이의 한쪽이 망하면 다른 한쪽도 위험해짐" },
+        { hanja: "羊頭狗肉", meaning: "양 머리를 걸어놓고 개고기를 판다는 뜻으로, 겉과 속이 다름" },
+        { hanja: "兎死狗烹", meaning: "토끼가 죽으면 사냥개도 삶아 먹힌다는 뜻으로, 필요할 때는 쓰고 필요 없을 때는 버림" }
+    ];
+
+    let currentLevel = 1;
+    const maxLevel = 100;
+    let questionsToAnswer = 1; // 현재 레벨에서 맞춰야 할 문제 수
+    let currentQuestionCount = 0; // 현재 레벨에서 맞춘 문제 수
+    let currentCorrectAnswer = "";
+
+    const levelDisplay = document.getElementById("level-display");
+    const progressDisplay = document.getElementById("progress-display");
+    const hanjaDisplay = document.getElementById("hanja-display");
+    const optionsContainer = document.getElementById("options-container");
+    const messageDisplay = document.getElementById("message");
+
+    // 랜덤 배열 섞기 함수
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 문제 생성 함수
+    function generateQuestion() {
+        messageDisplay.innerText = "";
+        progressDisplay.innerText = `현재 레벨 진행도: ${currentQuestionCount} / ${questionsToAnswer}`;
+        
+        // 정답 선택
+        const correctIdiom = idiomDB[Math.floor(Math.random() * idiomDB.length)];
+        currentCorrectAnswer = correctIdiom.meaning;
+        hanjaDisplay.innerText = correctIdiom.hanja;
+
+        // 오답 3개 추출 (정답과 겹치지 않게)
+        let wrongOptions = idiomDB.filter(item => item.meaning !== currentCorrectAnswer);
+        wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
+
+        // 정답과 오답을 합쳐서 4지선다 생성
+        let options = [correctIdiom.meaning, ...wrongOptions.map(item => item.meaning)];
+        options = shuffleArray(options);
+
+        // 버튼 화면에 그리기
+        optionsContainer.innerHTML = "";
+        options.forEach(optionText => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = optionText;
+            btn.onclick = () => checkAnswer(optionText);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // 정답 확인 로직
+    function checkAnswer(selectedOption) {
+        if (selectedOption === currentCorrectAnswer) {
+            currentQuestionCount++;
+            messageDisplay.style.color = "#FF1493";
+            messageDisplay.innerText = "정답입니다! 💕";
+
+            setTimeout(() => {
+                // 레벨업 조건 충족 시
+                if (currentQuestionCount >= questionsToAnswer) {
+                    if (currentLevel >= maxLevel) {
+                        alert("🎉 축하합니다! 100레벨을 모두 클리어하셨습니다! 🎉");
+                        return;
+                    }
+                    currentLevel++;
+                    questionsToAnswer = currentLevel; // 2레벨은 2문제, 3레벨은 3문제
+                    currentQuestionCount = 0;
+                    levelDisplay.innerText = `Level ${currentLevel}`;
+                    messageDisplay.innerText = `레벨 업! 레벨 ${currentLevel} 시작! 🚀`;
+                }
+                generateQuestion();
+            }, 800);
+        } else {
+            messageDisplay.style.color = "red";
+            messageDisplay.innerText = "앗! 틀렸어요. 처음부터 다시! 😢";
+            // 틀리면 레벨 진행도를 초기화하여 다시 도전하게 만듦
+            currentQuestionCount = 0;
+            setTimeout(() => {
+                generateQuestion();
+            }, 1000);
+        }
+    }
+
+    // 게임 시작
+    generateQuestion();
+</script>
+
+</body>
+</html>
