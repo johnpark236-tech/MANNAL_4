@@ -129,11 +129,11 @@
             gap: 12px;
         }
         
-        /* 🌟 선택지 버튼 스타일 (핑크 바탕 + 흰색 글씨 복구) 🌟 */
+        /* 선택지 버튼 스타일 (핑크 바탕 + 흰색 글씨) */
         button.option-btn {
             font-family: 'Jua', sans-serif;
-            background: #FF69B4; /* 화사한 핑크 바탕 */
-            color: white;        /* 깔끔한 흰색 글씨 */
+            background: #FF69B4; 
+            color: white;        
             font-weight: bold;
             border: 2px solid #FF69B4; 
             padding: 15px;
@@ -145,7 +145,7 @@
         }
         
         button.option-btn:hover {
-            background: #FF1493; /* 마우스 오버 시 조금 더 진한 핑크 */
+            background: #FF1493; 
             border: 2px solid #FF1493;
             transform: translateY(-2px);
         }
@@ -157,7 +157,7 @@
             margin-top: 20px;
             font-size: 16px;
             color: #FF1493;
-            height: 60px; /* 보상 텍스트를 위해 높이 유지 */
+            height: 60px; 
             line-height: 1.4;
         }
     </style>
@@ -263,7 +263,7 @@
         { difficulty: "중급", hanja: "羊頭狗肉", hangul: "양두구육", meaning: "양 머리를 걸어놓고 개고기를 판다는 뜻으로, 겉과 속이 다름" },
         { difficulty: "중급", hanja: "兎死狗烹", hangul: "토사구팽", meaning: "토끼가 죽으면 사냥개도 삶아 먹힌다는 뜻으로, 필요할 때는 쓰고 필요 없을 때는 버림" },
         
-        // 🔥 고급 사자성어 (새로 6개 추가됨)
+        // 🔥 고급 사자성어 
         { difficulty: "고급", hanja: "囊中之錐", hangul: "낭중지추", meaning: "주머니 속의 송곳이라는 뜻으로, 재능이 뛰어난 사람은 숨어 있어도 저절로 드러남" },
         { difficulty: "고급", hanja: "狐假虎威", hangul: "호가호위", meaning: "여우가 호랑이의 위세를 빌린다는 뜻으로, 남의 권세를 빌려 허세를 부림" },
         { difficulty: "고급", hanja: "畵龍點睛", hangul: "화룡점정", meaning: "용을 그리고 마지막으로 눈동자를 찍는다는 뜻으로, 가장 중요한 부분을 완성함" },
@@ -272,7 +272,7 @@
         { difficulty: "고급", hanja: "錦衣還鄕", hangul: "금의환향", meaning: "비단옷을 입고 고향에 돌아온다는 뜻으로, 출세하여 고향에 돌아옴" }
     ];
 
-    let filteredDB = []; // 유저가 선택한 난이도의 사자성어만 담을 배열
+    let filteredDB = []; 
     let currentLevel = 1;
     const maxLevel = 100;
     let questionsToAnswer = 1; 
@@ -288,24 +288,20 @@
     const optionsContainer = document.getElementById("options-container");
     const messageDisplay = document.getElementById("message");
 
-    // 화면 전환: 인트로 -> 난이도 선택
     function goToDifficultySelection() {
         initAudio(); 
         introScreen.style.display = "none";
         difficultyScreen.style.display = "block";
     }
 
-    // 난이도 선택 후 게임 시작
     function startGame(selectedDifficulty) {
         initAudio();
         
-        // 선택한 난이도와 일치하는 데이터만 추려냅니다.
         filteredDB = idiomDB.filter(item => item.difficulty === selectedDifficulty);
         
         difficultyScreen.style.display = "none";
         appScreen.style.display = "block";
         
-        // 시작 시 상단에 선택한 난이도 표시
         levelDisplay.innerText = `${selectedDifficulty} - Level 1`;
         
         generateQuestion();
@@ -344,14 +340,16 @@
         messageDisplay.innerText = "";
         progressDisplay.innerText = `현재 레벨 진행도: ${currentQuestionCount} / ${questionsToAnswer}`;
         
-        // 전체 DB가 아닌 필터링된 DB(해당 난이도)에서 문제 출제
         const correctIdiom = filteredDB[Math.floor(Math.random() * filteredDB.length)];
         currentCorrectAnswer = correctIdiom.meaning;
         
-        const hangulText = correctIdiom.hangul ? correctIdiom.hangul : "";
-        hanjaDisplay.innerText = `${correctIdiom.hanja || correctIdiom.파자}(${hangulText})`;
+        // 🔥 이 부분이 수정되었습니다!
+        // 한자와 한글 텍스트를 준비합니다.
+        const hangulText = correctIdiom.hangul ? `(${correctIdiom.hangul})` : "";
+        
+        // innerText 대신 innerHTML을 사용하여 <br> 태그로 줄바꿈을 적용합니다.
+        hanjaDisplay.innerHTML = `${correctIdiom.hanja || correctIdiom.파자}<br>${hangulText}`;
 
-        // 오답 역시 같은 난이도의 DB에서 추출
         let wrongOptions = filteredDB.filter(item => item.meaning !== currentCorrectAnswer);
         wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
 
@@ -385,7 +383,6 @@
                     questionsToAnswer = currentLevel; 
                     currentQuestionCount = 0;
                     
-                    // 레벨업 시 현재 난이도를 유지하며 텍스트 업데이트
                     const currentDifficultyText = levelDisplay.innerText.split(' - ')[0];
                     levelDisplay.innerText = `${currentDifficultyText} - Level ${currentLevel}`;
                     
