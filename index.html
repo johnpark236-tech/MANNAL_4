@@ -245,7 +245,6 @@
        🚀 게임 메인 로직 및 데이터베이스
        ======================================================= */
     
-    // 난이도(difficulty) 속성이 추가된 사자성어 DB
     const idiomDB = [
         // 🌱 초급 사자성어
         { difficulty: "초급", hanja: "一就月將", hangul: "일취월장", meaning: "날로 달로 나아지거나 발전함" },
@@ -272,6 +271,7 @@
         { difficulty: "고급", hanja: "錦衣還鄕", hangul: "금의환향", meaning: "비단옷을 입고 고향에 돌아온다는 뜻으로, 출세하여 고향에 돌아옴" }
     ];
 
+    let fullDifficultyDB = []; // 🔥 선택한 난이도의 원본 데이터를 보존할 배열
     let filteredDB = []; 
     let currentLevel = 1;
     const maxLevel = 100;
@@ -297,7 +297,11 @@
     function startGame(selectedDifficulty) {
         initAudio();
         
-        filteredDB = idiomDB.filter(item => item.difficulty === selectedDifficulty);
+        // 🔥 선택한 난이도의 원본 데이터를 따로 저장해둡니다. (오답 생성용)
+        fullDifficultyDB = idiomDB.filter(item => item.difficulty === selectedDifficulty);
+        
+        // 🔥 처음 시작할 땐 원본 데이터를 복사해서 문제 은행을 만듭니다.
+        filteredDB = [...fullDifficultyDB];
         
         difficultyScreen.style.display = "none";
         appScreen.style.display = "block";
@@ -315,14 +319,27 @@
         return array;
     }
 
+    // 🔥 단계별로 강도가 높아지는 팝업 축하 메시지 생성기 (MZ 트렌드 반영)
+    function getLevelUpPopupMessage(level) {
+        if (level <= 5) return `[레벨 ${level} 달성]\n오! 폼 미쳤다! 시작부터 찢었어! 천재만재의 등장! 🌟`;
+        if (level <= 10) return `[레벨 ${level} 달성]\n와... 두뇌 회전 속도 실화임? 슈퍼컴퓨터도 울고 갈 지능! 🧠🔥`;
+        if (level <= 20) return `[레벨 ${level} 달성]\n당신... 혹시 전생에 집현전 학자? 세종대왕님이 박수 치고 계심! 👏👑`;
+        if (level <= 30) return `[레벨 ${level} 달성]\n이 정도면 사자성어 1타 강사! 지나가던 강아지도 당신의 지식에 무릎을 탁 칩니다! 🐶💥`;
+        if (level <= 40) return `[레벨 ${level} 달성]\n우주 대폭발급 지식! NASA에서 당신의 뇌를 연구하고 싶어 안달 났어요! 🚀🌌`;
+        if (level <= 50) return `[레벨 ${level} 달성]\n지구상에 존재하는 모든 책을 흡수한 자! 당신이 걷는 길이 곧 역사가 됩니다! 📚🚶‍♂️`;
+        if (level <= 60) return `[레벨 ${level} 달성]\n아인슈타인: '아앗... 내가 졌다.' 역대급 천재성! 당장 노벨상 받으러 가세요! 🏆🥇`;
+        if (level <= 70) return `[레벨 ${level} 달성]\n당신의 뇌세포 하나하나가 다이아몬드로 이루어진 게 분명함! 눈부셔! 💎✨`;
+        if (level <= 80) return `[레벨 ${level} 달성]\n신이 인간을 만들 때 지능 스탯을 당신에게 몰빵했음! 우주 최강 지식인! 🌌👑`;
+        if (level <= 90) return `[레벨 ${level} 달성]\n당신이 숨 쉴 때마다 지식의 향기가 퍼져 나갑니다! 걸어 다니는 백과사전 그 자체! 🌸📖`;
+        if (level <= 99) return `[레벨 ${level} 달성]\n인류의 진화는 당신을 위해 존재했다! 외계인도 당신의 사자성어 실력에 감격해서 눈물 흘림! 👽😭`;
+        return `[레벨 100 마스터 달성!]\n🎉 경축 🎉 우주 최고, 역사상 전무후무한 사자성어 마스터 등극! 오늘 당장 로또 사세요! 무조건 1등 당첨! 💰🎉`;
+    }
+
+    // 기존 텍스트 메시지용 (팝업과 별도로 하단 텍스트 창에 보이기 위함)
     function getPraiseMessage(level) {
-        if (level === 2) return "오! 시작이 좋습니다! 천재의 기운이 느껴져요! 🌟";
-        if (level <= 5) return `레벨 ${level} 달성! 당신의 두뇌는 스펀지인가요?! 🧠✨`;
-        if (level <= 10) return `레벨 ${level}! 서당 훈장님도 감격해서 울고 갈 실력! 😭👍`;
-        if (level <= 20) return `레벨 ${level}! 한석봉도 울고 갈 사자성어 마스터! 🖌️🔥`;
-        if (level <= 40) return `레벨 ${level}! 길 가다 돈 주울 관상입니다! 💸🏃💨`;
-        if (level <= 70) return `레벨 ${level} 돌파! 전생에 조선시대 정1품 대감마님?! 👑✨`;
-        return `레벨 ${level}!!! 우주 최강 사자성어 신의 경지! 오늘 당장 로또 사세요! 🚀💰`;
+        if (level <= 10) return `서당 훈장님도 감격해서 울고 갈 실력! 😭👍`;
+        if (level <= 40) return `길 가다 돈 주울 관상입니다! 이 기세로 고고! 💸`;
+        return `신의 경지! 오늘 당장 로또 사세요! 🚀💰`;
     }
 
     const MZRewards = [
@@ -340,17 +357,21 @@
         messageDisplay.innerText = "";
         progressDisplay.innerText = `현재 레벨 진행도: ${currentQuestionCount} / ${questionsToAnswer}`;
         
+        // 🔥 만약 남은 문제(배열)가 0개라면, 문제를 전부 맞춘 것이므로 다시 리필해줍니다.
+        // (수천 개의 데이터를 넣으시면 이 메시지를 볼 일이 거의 없겠지만, 만약을 대비한 안전장치입니다!)
+        if (filteredDB.length === 0) {
+            filteredDB = [...fullDifficultyDB];
+        }
+
         const correctIdiom = filteredDB[Math.floor(Math.random() * filteredDB.length)];
         currentCorrectAnswer = correctIdiom.meaning;
         
-        // 🔥 이 부분이 수정되었습니다!
-        // 한자와 한글 텍스트를 준비합니다.
         const hangulText = correctIdiom.hangul ? `(${correctIdiom.hangul})` : "";
-        
-        // innerText 대신 innerHTML을 사용하여 <br> 태그로 줄바꿈을 적용합니다.
         hanjaDisplay.innerHTML = `${correctIdiom.hanja || correctIdiom.파자}<br>${hangulText}`;
 
-        let wrongOptions = filteredDB.filter(item => item.meaning !== currentCorrectAnswer);
+        // 🔥 오답 보기는 줄어든 배열이 아닌 '전체 원본 배열(fullDifficultyDB)'에서 가져와 
+        // 선택지가 4개가 안 되는 버그를 방지합니다.
+        let wrongOptions = fullDifficultyDB.filter(item => item.meaning !== currentCorrectAnswer);
         wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
 
         let options = [correctIdiom.meaning, ...wrongOptions.map(item => item.meaning)];
@@ -370,13 +391,17 @@
         if (selectedOption === currentCorrectAnswer) {
             playDingDong(); 
             currentQuestionCount++;
+            
+            // 🔥 정답을 맞춘 문제는 문제 배열(filteredDB)에서 영구 제외하여 다시 나오지 않게 합니다.
+            filteredDB = filteredDB.filter(item => item.meaning !== currentCorrectAnswer);
+
             messageDisplay.style.color = "#FF1493";
             messageDisplay.innerText = "정답입니다! 💕";
 
             setTimeout(() => {
                 if (currentQuestionCount >= questionsToAnswer) {
                     if (currentLevel >= maxLevel) {
-                        alert("🎉 축하합니다! 100레벨을 모두 클리어하셨습니다! 🎉");
+                        alert(getLevelUpPopupMessage(maxLevel)); // 100레벨 달성 시 전용 팝업 출력
                         return;
                     }
                     currentLevel++;
@@ -386,11 +411,14 @@
                     const currentDifficultyText = levelDisplay.innerText.split(' - ')[0];
                     levelDisplay.innerText = `${currentDifficultyText} - Level ${currentLevel}`;
                     
+                    // 🔥 레벨업 시 화면 위에 띄우는 팝업 알림 (점진적으로 칭찬 강화)
+                    alert(getLevelUpPopupMessage(currentLevel));
+
                     const randomReward = MZRewards[Math.floor(Math.random() * MZRewards.length)];
                     messageDisplay.innerHTML = `${getPraiseMessage(currentLevel)}<br><span style="color:#2C5F2D; font-size:15px; font-weight:bold;">🎁 보너스: ${randomReward}</span>`;
                 }
                 
-                const delay = currentQuestionCount === 0 ? 3000 : 800; 
+                const delay = currentQuestionCount === 0 ? 1500 : 800; // 팝업창 닫은 후 대기 시간 조정
                 setTimeout(() => {
                     generateQuestion();
                 }, delay);
