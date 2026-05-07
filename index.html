@@ -204,7 +204,7 @@
 
     function initAudio() {
         if (!audioCtx) {
-            audioCtx = new AudioContext();
+            audioCtx = new Context();
         }
         if (audioCtx.state === 'suspended') {
             audioCtx.resume();
@@ -252,7 +252,7 @@
         { difficulty: "초급", hanja: "作心三일", hangul: "작심삼일", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
         { difficulty: "초급", hanja: "結者解之", hangul: "결자해지", meaning: "일을 맺은 사람이 풀어야 한다는 뜻으로, 일을 저지른 사람이 해결해야 함" },
         { difficulty: "초급", hanja: "苦盡甘來", hangul: "고진감래", meaning: "고생 끝에 낙이 온다" },
-        { difficulty: "초급", hanja: "雪上加霜", hangul: "설상가상", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
+        { difficulty: "초급", hanja: "雪상加霜", hangul: "설상가상", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
         
         // 🌿 중급 사자성어
         { difficulty: "중급", hanja: "見蚊拔劍", hangul: "견문발검", meaning: "모기를 보고 칼을 뺀다는 뜻으로, 사소한 일에 크게 성내어 덤빔" },
@@ -292,7 +292,7 @@
         { difficulty: "초급", hanja: "不知其數", hangul: "부지기수", meaning: "그 수를 알지 못할 만큼 매우 많음" },
         { difficulty: "초급", hanja: "事必歸正", hangul: "사필귀정", meaning: "모든 일은 반드시 바른길로 돌아감" },
         { difficulty: "초급", hanja: "山戰水戰", hangul: "산전수전", meaning: "산과 물에서 싸움을 다 겪었다는 뜻으로, 세상의 온갖 고난을 다 경험함" },
-        { difficulty: "초급", hanja: "相扶相助", hangul: "상부상조", meaning: "서로서로 도움" },
+        { difficulty: "초급", hanja: "相扶상助", hangul: "상부상조", meaning: "서로서로 도움" },
         { difficulty: "초급", hanja: "先公後私", hangul: "선공후사", meaning: "공적인 일을 먼저 하고 사적인 일을 뒤로 미룸" },
         { difficulty: "초급", hanja: "束手無策", hangul: "속수무책", meaning: "손을 묶인 것처럼 어찌할 도리가 없어 꼼짝 못함" },
         { difficulty: "초급", hanja: "始終一貫", hangul: "시종일관", meaning: "처음부터 끝까지 방침이나 태도가 변함없이 한결같음" },
@@ -306,7 +306,7 @@
         { difficulty: "초급", hanja: "外柔內剛", hangul: "외유내강", meaning: "겉은 부드러우나 속은 단단하고 강함" },
         { difficulty: "초급", hanja: "右往左往", hangul: "우왕좌왕", meaning: "오른쪽으로 갔다 왼쪽으로 갔다 하며 방향을 잡지 못함" },
         { difficulty: "초급", hanja: "擺布一體", hangul: "유비무환", meaning: "준비가 있으면 근심이 없음" },
-        { difficulty: "초급", hanja: "類類相從", hangul: "유유상종", meaning: "끼리끼리 모이고 서로 사귐" },
+        { difficulty: "초급", hanja: "類類상從", hangul: "유유상종", meaning: "끼리끼리 모이고 서로 사귐" },
         { difficulty: "초급", hanja: "異口同聲", hangul: "이구동성", meaning: "입은 다르나 목소리는 같다는 뜻으로, 여러 사람의 의견이 일치함" },
         { difficulty: "초급", hanja: "以心傳心", hangul: "이심전심", meaning: "말하지 않아도 마음에서 마음으로 뜻이 통함" },
         { difficulty: "초급", hanja: "一石二鳥", hangul: "일석이조", meaning: "돌 한 개를 던져 새 두 마리를 잡는다는 뜻으로, 동시에 두 가지 이득을 봄" },
@@ -343,11 +343,11 @@
         { difficulty: "중급", hanja: "捲土重來", hangul: "권토중래", meaning: "흙먼지를 일으키며 다시 온다는 뜻으로, 실패한 사람이 세력을 만회하여 다시 일어남" },
         { difficulty: "중급", hanja: "金科玉條", hangul: "금과옥조", meaning: "금이나 옥처럼 귀중한 법률이나 규정" },
         { difficulty: "중급", hanja: "氣高萬丈", hangul: "기고만장", meaning: "기운이 만 장이나 뻗쳤다는 뜻으로, 기세가 대단함" },
-        { difficulty: "중급", hanja: "奇想天外", hangul: "기상천외", meaning: "쉽게 짐작할 수 없을 정도로 기발하고 엉뚱한 생각" },
+        { difficulty: "중급", hanja: "奇상天外", hangul: "기상천외", meaning: "쉽게 짐작할 수 없을 정도로 기발하고 엉뚱한 생각" },
         { difficulty: "중급", hanja: "勞心焦思", hangul: "노심초사", meaning: "몹시 마음을 쓰며 애를 태움" },
         { difficulty: "중급", hanja: "單刀直入", hangul: "단도직입", meaning: "칼 한 자루를 쥐고 곧바로 쳐들어간다는 뜻으로, 서두 없이 곧바로 요점을 꺼집어냄" },
         { difficulty: "중급", hanja: "螳螂拒轍", hangul: "당랑거철", meaning: "사마귀가 수레바퀴를 막는다는 뜻으로, 자기 분수를 모르고 무모하게 덤빔" },
-        { difficulty: "중급", hanja: "同病相憐", hangul: "동병상련", meaning: "처지가 비슷한 사람끼리 서로 동정하고 도움" },
+        { difficulty: "중급", hanja: "同病상憐", hangul: "동병상련", meaning: "처지가 비슷한 사람끼리 서로 동정하고 도움" },
         { difficulty: "중급", hanja: "同床異夢", hangul: "동상이몽", meaning: "겉으로는 같이 행동하면서 속으로는 딴생각을 함" },
         { difficulty: "중급", hanja: "燈火可親", hangul: "등화가친", meaning: "등불을 가까이하기 좋다는 뜻으로, 가을철이 독서하기에 좋은 계절임을 이르는 말" },
         { difficulty: "중급", hanja: "馬耳東風", hangul: "마이동풍", meaning: "말의 귀에 동풍이 분다는 뜻으로, 남의 말을 전혀 귀담아듣지 않고 흘려버림" },
@@ -404,7 +404,7 @@
         { difficulty: "고급", hanja: "麥秀之歎", hangul: "맥수지탄", meaning: "보리만 무성하게 자란 것을 보고 탄식한다는 뜻으로, 고국이 멸망한 것을 슬퍼함" },
         { difficulty: "고급", hanja: "面從腹背", hangul: "면종복배", meaning: "앞에서는 순종하는 척하고 뒤에서는 배반함" },
         { difficulty: "고급", hanja: "滅私奉公", hangul: "멸사봉공", meaning: "사사로운 이익을 버리고 공공을 위해 헌신함" },
-        { difficulty: "고급", hanja: "明哲保身", hangul: "명철보신", meaning: "사리에 밝아 신망을 얻고 몸을 잘 보존함" },
+        { difficulty: "고급", hanja: "明哲보身", hangul: "명철보신", meaning: "사리에 밝아 신망을 얻고 몸을 잘 보존함" },
         { difficulty: "고급", hanja: "目不識丁", hangul: "목불식정", meaning: "눈으로 낫 놓고 기역 자도 모른다는 뜻으로, 아주 무식함" },
         { difficulty: "고급", hanja: "聞一知十", hangul: "문일지십", meaning: "하나를 들으면 열을 안다는 뜻으로, 매우 총명함" },
         { difficulty: "고급", hanja: "尾生之信", hangul: "미생지신", meaning: "미생의 신의라는 뜻으로, 약속을 융통성 없이 고집스럽게 지키는 어리석음" },
@@ -477,7 +477,7 @@
     }
 
     function getLevelUpPopupMessage(level) {
-        if (level <= 5) return `[레벨 ${level} 달성]\n오! 폼 미쳤다! 시작부터 찢었어! 천재만재의 등장! 🌟`;
+        if (level <= 5) return `[레벨 ${level} 달성]\n오! 폼 미쳤다! 시작부터 찢었어! 천재의 등장! 🌟`;
         if (level <= 10) return `[레벨 ${level} 달성]\n와... 두뇌 회전 속도 실화임? 슈퍼컴퓨터도 울고 갈 지능! 🧠🔥`;
         if (level <= 20) return `[레벨 ${level} 달성]\n당신... 혹시 전생에 집현전 학자? 세종대왕님이 박수 치고 계심! 👏👑`;
         if (level <= 30) return `[레벨 ${level} 달성]\n이 정도면 사자성어 1타 강사! 지나가던 강아지도 당신의 지식에 무릎을 탁 칩니다! 🐶💥`;
@@ -586,12 +586,24 @@
 
                     const randomReward = MZRewards[Math.floor(Math.random() * MZRewards.length)];
                     messageDisplay.innerHTML = `${getPraiseMessage(currentLevel)}<br><span style="color:#2C5F2D; font-size:15px; font-weight:bold;">🎁 보너스: ${randomReward}</span>`;
+                    
+                    // 🔥 [핵심 수정] 레벨업 시 자동 타이머를 작동시키지 않고, 칭찬글과 보상을 오래 볼 수 있도록 '확인' 버튼을 생성합니다.
+                    optionsContainer.innerHTML = ""; // 기존 4지선다 버튼을 깨끗하게 지웁니다.
+                    const nextLevelBtn = document.createElement("button");
+                    nextLevelBtn.className = "start-btn"; // 디자인 일관성을 위해 사용 중인 예쁜 핑크 버튼 스타일을 적용합니다.
+                    nextLevelBtn.style.width = "100%";
+                    nextLevelBtn.innerText = "확인하고 다음 레벨 도전! 🚀";
+                    nextLevelBtn.onclick = () => {
+                        generateQuestion(); // 유저가 직접 버튼을 클릭해야만 다음 레벨 문제가 출제됩니다.
+                    };
+                    optionsContainer.appendChild(nextLevelBtn);
+                    return; // 타이머가 돌아가는 아래의 코드가 실행되지 않도록 강제로 함수를 리턴(종료)시킵니다.
                 }
                 
-                const delay = currentQuestionCount === 0 ? 1500 : 800; 
+                // 레벨업이 아닌 일반 문제 정답 시에는 기존 흐름대로 부드럽게 자동으로 다음 문제가 나옵니다.
                 setTimeout(() => {
                     generateQuestion();
-                }, delay);
+                }, 800);
 
             }, 500); 
         } else {
