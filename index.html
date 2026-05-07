@@ -249,7 +249,7 @@
         // 🌱 초급 사자성어
         { difficulty: "초급", hanja: "一就月將", hangul: "일취월장", meaning: "날로 달로 나아지거나 발전함" },
         { difficulty: "초급", hanja: "大器晩成", hangul: "대기만성", meaning: "큰 사람이 되기 위해서는 많은 노력과 시간이 필요함" },
-        { difficulty: "초급", hanja: "作心三日", hangul: "작심삼일", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
+        { difficulty: "초급", hanja: "作心三일", hangul: "작심삼일", meaning: "단단히 먹은 마음이 사흘을 가지 못함" },
         { difficulty: "초급", hanja: "結者解之", hangul: "결자해지", meaning: "일을 맺은 사람이 풀어야 한다는 뜻으로, 일을 저지른 사람이 해결해야 함" },
         { difficulty: "초급", hanja: "苦盡甘來", hangul: "고진감래", meaning: "고생 끝에 낙이 온다" },
         { difficulty: "초급", hanja: "雪上加霜", hangul: "설상가상", meaning: "눈 위에 서리가 덮인다는 뜻으로, 엎친 데 덮친 격" },
@@ -263,7 +263,7 @@
         { difficulty: "중급", hanja: "兎死狗烹", hangul: "토사구팽", meaning: "토끼가 죽으면 사냥개도 삶아 먹힌다는 뜻으로, 필요할 때는 쓰고 필요 없을 때는 버림" },
         
         // 🔥 고급 사자성어 
-        { difficulty: "고급", hanja: "囊中之錐", hangul: "낭중지추", meaning: "주머니 속의 송곳이라는 뜻으로, 재능이 뛰어난 사람은 숨어 있어도 저절로 드러남" },
+        { difficulty: "고급", hanja: "囊중之錐", hangul: "낭중지추", meaning: "주머니 속의 송곳이라는 뜻으로, 재능이 뛰어난 사람은 숨어 있어도 저절로 드러남" },
         { difficulty: "고급", hanja: "狐假虎威", hangul: "호가호위", meaning: "여우가 호랑이의 위세를 빌린다는 뜻으로, 남의 권세를 빌려 허세를 부림" },
         { difficulty: "고급", hanja: "畵龍點睛", hangul: "화룡점정", meaning: "용을 그리고 마지막으로 눈동자를 찍는다는 뜻으로, 가장 중요한 부분을 완성함" },
         { difficulty: "고급", hanja: "群鷄一鶴", hangul: "군계일학", meaning: "여러 평범한 사람들 가운데 뛰어난 한 사람" },
@@ -271,8 +271,9 @@
         { difficulty: "고급", hanja: "錦衣還鄕", hangul: "금의환향", meaning: "비단옷을 입고 고향에 돌아온다는 뜻으로, 출세하여 고향에 돌아옴" }
     ];
 
-    let fullDifficultyDB = []; // 🔥 선택한 난이도의 원본 데이터를 보존할 배열
+    let fullDifficultyDB = []; 
     let filteredDB = []; 
+    let solvedMeanings = []; // 🔥 한번도 정답을 맞춘 적 없는 문제만 판별하기 위해, 정답 처리된 풀이(meaning)를 영구 기록하는 세션 배열
     let currentLevel = 1;
     const maxLevel = 100;
     let questionsToAnswer = 1; 
@@ -297,11 +298,9 @@
     function startGame(selectedDifficulty) {
         initAudio();
         
-        // 🔥 선택한 난이도의 원본 데이터를 따로 저장해둡니다. (오답 생성용)
         fullDifficultyDB = idiomDB.filter(item => item.difficulty === selectedDifficulty);
-        
-        // 🔥 처음 시작할 땐 원본 데이터를 복사해서 문제 은행을 만듭니다.
         filteredDB = [...fullDifficultyDB];
+        solvedMeanings = []; // 🔥 새로운 난이도 진입 시 정답 기록 배열 완벽 초기화
         
         difficultyScreen.style.display = "none";
         appScreen.style.display = "block";
@@ -319,7 +318,6 @@
         return array;
     }
 
-    // 🔥 단계별로 강도가 높아지는 팝업 축하 메시지 생성기 (MZ 트렌드 반영)
     function getLevelUpPopupMessage(level) {
         if (level <= 5) return `[레벨 ${level} 달성]\n오! 폼 미쳤다! 시작부터 찢었어! 천재만재의 등장! 🌟`;
         if (level <= 10) return `[레벨 ${level} 달성]\n와... 두뇌 회전 속도 실화임? 슈퍼컴퓨터도 울고 갈 지능! 🧠🔥`;
@@ -335,7 +333,6 @@
         return `[레벨 100 마스터 달성!]\n🎉 경축 🎉 우주 최고, 역사상 전무후무한 사자성어 마스터 등극! 오늘 당장 로또 사세요! 무조건 1등 당첨! 💰🎉`;
     }
 
-    // 기존 텍스트 메시지용 (팝업과 별도로 하단 텍스트 창에 보이기 위함)
     function getPraiseMessage(level) {
         if (level <= 10) return `서당 훈장님도 감격해서 울고 갈 실력! 😭👍`;
         if (level <= 40) return `길 가다 돈 주울 관상입니다! 이 기세로 고고! 💸`;
@@ -357,10 +354,22 @@
         messageDisplay.innerText = "";
         progressDisplay.innerText = `현재 레벨 진행도: ${currentQuestionCount} / ${questionsToAnswer}`;
         
-        // 🔥 만약 남은 문제(배열)가 0개라면, 문제를 전부 맞춘 것이므로 다시 리필해줍니다.
-        // (수천 개의 데이터를 넣으시면 이 메시지를 볼 일이 거의 없겠지만, 만약을 대비한 안전장치입니다!)
+        // 🔥 filteredDB가 비어있을 때, 원본 중에서 '한번도 맞추지 못한' 문제들로만 안전하게 추려 리필합니다.
         if (filteredDB.length === 0) {
-            filteredDB = [...fullDifficultyDB];
+            filteredDB = fullDifficultyDB.filter(item => !solvedMeanings.includes(item.meaning));
+            
+            // 🔥 만약 진짜로 단 하나의 문제도 남지 않고 모든 문제를 정답 처리했다면 (DB 전체 정복 상태)
+            if (filteredDB.length === 0) {
+                alert("🎉 대단합니다! 해당 난이도의 모든 문제를 전부 클리어하셨습니다! 완벽 정복 기념으로 다시 처음부터 시작합니다! 🎉");
+                solvedMeanings = []; // 영구 제외 기록 초기화
+                filteredDB = [...fullDifficultyDB]; // 전체 리필
+                currentLevel = 1;
+                questionsToAnswer = 1;
+                currentQuestionCount = 0;
+                const currentDifficultyText = levelDisplay.innerText.split(' - ')[0];
+                levelDisplay.innerText = `${currentDifficultyText} - Level 1`;
+                progressDisplay.innerText = `현재 레벨 진행도: 0 / 1`;
+            }
         }
 
         const correctIdiom = filteredDB[Math.floor(Math.random() * filteredDB.length)];
@@ -369,8 +378,7 @@
         const hangulText = correctIdiom.hangul ? `(${correctIdiom.hangul})` : "";
         hanjaDisplay.innerHTML = `${correctIdiom.hanja || correctIdiom.파자}<br>${hangulText}`;
 
-        // 🔥 오답 보기는 줄어든 배열이 아닌 '전체 원본 배열(fullDifficultyDB)'에서 가져와 
-        // 선택지가 4개가 안 되는 버그를 방지합니다.
+        // 오답 보기는 4개 미만으로 남은 출제 리스트가 아닌 원본 데이터 전체에서 안전하게 추출하여 오류를 막습니다.
         let wrongOptions = fullDifficultyDB.filter(item => item.meaning !== currentCorrectAnswer);
         wrongOptions = shuffleArray(wrongOptions).slice(0, 3);
 
@@ -392,7 +400,12 @@
             playDingDong(); 
             currentQuestionCount++;
             
-            // 🔥 정답을 맞춘 문제는 문제 배열(filteredDB)에서 영구 제외하여 다시 나오지 않게 합니다.
+            // 🔥 [핵심 수정] 정답을 맞춘 사자성어의 뜻을 영구 기록 리스트에 보관합니다.
+            if (!solvedMeanings.includes(currentCorrectAnswer)) {
+                solvedMeanings.push(currentCorrectAnswer);
+            }
+            
+            // 🔥 현재 들고 있는 출제 대기 배열(filteredDB)에서도 완전히 제거하여 이번 게임 내내 다신 안 나오게 합니다.
             filteredDB = filteredDB.filter(item => item.meaning !== currentCorrectAnswer);
 
             messageDisplay.style.color = "#FF1493";
@@ -401,7 +414,7 @@
             setTimeout(() => {
                 if (currentQuestionCount >= questionsToAnswer) {
                     if (currentLevel >= maxLevel) {
-                        alert(getLevelUpPopupMessage(maxLevel)); // 100레벨 달성 시 전용 팝업 출력
+                        alert(getLevelUpPopupMessage(maxLevel)); 
                         return;
                     }
                     currentLevel++;
@@ -411,14 +424,13 @@
                     const currentDifficultyText = levelDisplay.innerText.split(' - ')[0];
                     levelDisplay.innerText = `${currentDifficultyText} - Level ${currentLevel}`;
                     
-                    // 🔥 레벨업 시 화면 위에 띄우는 팝업 알림 (점진적으로 칭찬 강화)
                     alert(getLevelUpPopupMessage(currentLevel));
 
                     const randomReward = MZRewards[Math.floor(Math.random() * MZRewards.length)];
                     messageDisplay.innerHTML = `${getPraiseMessage(currentLevel)}<br><span style="color:#2C5F2D; font-size:15px; font-weight:bold;">🎁 보너스: ${randomReward}</span>`;
                 }
                 
-                const delay = currentQuestionCount === 0 ? 1500 : 800; // 팝업창 닫은 후 대기 시간 조정
+                const delay = currentQuestionCount === 0 ? 1500 : 800; 
                 setTimeout(() => {
                     generateQuestion();
                 }, delay);
